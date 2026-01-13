@@ -1,0 +1,28 @@
+# Development stage
+FROM node:20-alpine AS development
+
+WORKDIR /app
+
+COPY package*.json ./
+
+RUN apk add --no-cache python3 make g++
+
+RUN npm ci
+
+COPY . .
+
+EXPOSE 5173
+
+CMD ["npm", "run", "dev", "--", "--host", "0.0.0.0"]
+
+# Production stage
+FROM node:20-alpine AS builder
+
+WORKDIR /app
+
+COPY package*.json ./
+RUN npm ci
+
+COPY . .
+
+RUN npm run build
