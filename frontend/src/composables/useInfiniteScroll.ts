@@ -16,7 +16,10 @@ export function useInfiniteScroll(
   const setupObserver = () => {
     if (!el.value) return
 
-    if (observer) observer.disconnect()
+    if (observer) {
+      observer.disconnect()
+      observer = null
+    }
 
     observer = new IntersectionObserver(
       (entries) => {
@@ -38,11 +41,18 @@ export function useInfiniteScroll(
     observer.observe(el.value)
   }
 
-  watch(() => el.value, setupObserver)
-  watch(() => root?.value, setupObserver)
+  watch(
+    () => ({ el: el.value, root: root?.value }),
+    () => setupObserver(),
+    { deep: false }
+  )
+
   setupObserver()
 
   onUnmounted(() => {
-    if (observer) observer.disconnect()
+    if (observer) {
+      observer.disconnect()
+      observer = null
+    }
   })
 }

@@ -80,7 +80,7 @@ export const useItemsStore = defineStore("items", {
     },
 
     async sync() {
-      if (this.syncing || this.dragging) return
+      if (this.syncing || this.isDragging) return
 
       this.syncing = true
       this.dirty = false
