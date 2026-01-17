@@ -4,8 +4,9 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "docker": "vite",
-    "start": "docker-compose -f docker-compose.dev.yml up --build",
+    "docker": "docker-compose -f docker-compose.dev.yml up --build",
+    "start:backend": "cd ../backend && npm run dev",
+    "start:frontend": "cd ../frontend && npm run dev",
     "build": "vue-tsc -b && vite build",
     "preview": "vite preview"
   }
