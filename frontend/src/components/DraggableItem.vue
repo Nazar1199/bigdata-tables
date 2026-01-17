@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed, inject, ref } from "vue"
-import { useDraggable, useDroppable } from "@vue-dnd-kit/core"
+import { useDraggable } from "@vue-dnd-kit/core"
 import { useItemsStore } from "../stores/items.store"
 
 const store = useItemsStore()
@@ -31,7 +31,6 @@ const isHoveredLocally = ref(false)
 
 /* ---------- DRAGGABLE ---------- */
 const {
-  elementRef: dragRef,
   isDragging,
   handleDragStart,
 } = useDraggable({
