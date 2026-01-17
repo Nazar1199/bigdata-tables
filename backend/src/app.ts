@@ -10,25 +10,53 @@ import { swaggerSpec } from "./swagger";
 
 export const app = express();
 
-app.use(cors());
+// ========== CORS Configuration ==========
+const corsOptions = {
+  origin: (origin: string | undefined, callback: (err: Error | null, allow?: boolean) => void) => {
+    const allowedOrigins = (process.env.ALLOWED_ORIGINS || "http://localhost:5173,http://localhost:3000,http://bigdata-tables-backend-production.up.railway.app").split(",");
+    
+    // Allow requests with no origin (like mobile apps or curl requests)
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error("Not allowed by CORS"));
+    }
+  },
+  credentials: true,
+  methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization"],
+  maxAge: 86400, // 24 hours
+};
+
+app.use(cors(corsOptions));
 app.use(express.json());
 
+// ========== Services ==========
 const store = new MemoryItemsStore();
 const queueService = new QueueService(store);
 const itemsService = new ItemsService(store, queueService);
 
 queueService.start();
 
-app.use("/items", itemsController);
-app.use("/sync", syncController);
+// ========== Routes ==========
+app.use("/api/items", itemsController);
+app.use("/api/sync", syncController);
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 // Health check endpoint
-app.get("/api/", (req, res) => {
+app.get("/api/health", (req, res) => {
   res.status(200).json({
     message: "Сервер работает!",
     timestamp: new Date().toISOString(),
     status: "success"
+  });
+});
+
+// 404 handler
+app.use((req, res) => {
+  res.status(404).json({
+    error: "Not found",
+    path: req.path
   });
 });
 
