@@ -6,8 +6,6 @@
   "scripts": {
     "docker": "docker-compose -f docker-compose.dev.yml up --build",
     "start:backend": "cd ../backend && npm run dev",
-    "start:frontend": "cd ../frontend && npm run dev",
-    "build": "vue-tsc -b && vite build",
-    "preview": "vite preview"
+    "start:frontend": "cd ../frontend && npm run dev"
   }
 }
