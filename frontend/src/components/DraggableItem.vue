@@ -20,14 +20,14 @@ const hoveredItem = inject<{ value: any }>("hoveredItem", { value: null })
 const isHoveredLocally = ref(false)
 
 /* ---------- DROPPABLE ---------- */
-const { elementRef: dropRef } = useDroppable({
-  groups: ["items"],
-  data: computed(() => ({
-    id: props.item,
-    index: props.index,
-    list: props.list,
-  })),
-})
+// const { elementRef: dropRef } = useDroppable({
+//   groups: ["items"],
+//   data: computed(() => ({
+//     id: props.item,
+//     index: props.index,
+//     list: props.list,
+//   })),
+// })
 
 /* ---------- DRAGGABLE ---------- */
 const {
