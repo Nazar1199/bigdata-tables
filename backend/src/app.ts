@@ -13,6 +13,7 @@ export const app = express();
 // ========== CORS Configuration ==========
 const corsOptions = {
   origin: (origin: string | undefined, callback: (err: Error | null, allow?: boolean) => void) => {
+    if (process.env.NODE_ENV === "development") {
     const allowedOrigins = (process.env.ALLOWED_ORIGINS || "http://localhost:5173,http://localhost:3000").split(",");
     
     // Allow requests with no origin (like mobile apps or curl requests)
@@ -20,6 +21,10 @@ const corsOptions = {
       callback(null, true);
     } else {
       callback(new Error("Not allowed by CORS"));
+    }
+    } else {
+      callback(null, true);
+      return;
     }
   },
   credentials: true,
