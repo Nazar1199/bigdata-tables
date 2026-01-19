@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { computed, inject, ref } from "vue"
-import { useDraggable } from "@vue-dnd-kit/core"
+import { computed, inject, ref, watch } from "vue"
+import { useDraggable, useDroppable } from "@vue-dnd-kit/core"
 import { useItemsStore } from "../stores/items.store"
 
 const store = useItemsStore()
@@ -20,17 +20,18 @@ const hoveredItem = inject<{ value: any }>("hoveredItem", { value: null })
 const isHoveredLocally = ref(false)
 
 /* ---------- DROPPABLE ---------- */
-// const { elementRef: dropRef } = useDroppable({
-//   groups: ["items"],
-//   data: computed(() => ({
-//     id: props.item,
-//     index: props.index,
-//     list: props.list,
-//   })),
-// })
+const { elementRef: dropRef } = useDroppable({
+  groups: ["items"],
+  data: computed(() => ({
+    id: props.item,
+    index: props.index,
+    list: props.list,
+  })),
+})
 
 /* ---------- DRAGGABLE ---------- */
 const {
+  elementRef: dragRef,
   isDragging,
   handleDragStart,
 } = useDraggable({
@@ -47,6 +48,7 @@ const {
     },
     onEnd: (_store, payload) => {
       store.setDragging(false)
+      isHoveredLocally.value = false
       const hovered = hoveredItem?.value
       emit("drop", hovered, payload)
       if (hoveredItem) {
@@ -75,6 +77,16 @@ const handleMouseLeave = () => {
     hoveredItem.value = null
   }
 }
+
+// Очистка при завершении drag
+watch(() => store.isDragging, (newValue) => {
+  if (!newValue) {
+    isHoveredLocally.value = false
+    if (hoveredItem?.value?.id === props.item) {
+      hoveredItem.value = null
+    }
+  }
+})
 </script>
 
 <template>
