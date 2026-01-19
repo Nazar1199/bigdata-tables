@@ -50,7 +50,7 @@ const router = Router();
 
 router.get("/", async (req: Request, res: Response) => {
   const { side, offset, limit, search } = req.query;
-
+  console.log("Received /items request with query:", req.query);
   if (side !== "left" && side !== "right") {
     return res.status(400).json({ error: "Invalid side" });
   }
