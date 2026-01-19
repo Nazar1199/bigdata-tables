@@ -5,6 +5,13 @@ import vue from '@vitejs/plugin-vue'
 export default defineConfig({
   plugins: [vue()],
   server: {
-    allowedHosts: true
+    allowedHosts: true,
+    proxy: {
+      '/api': {
+        target: 'http://bigdata-tables-backend-production.up.railway.app',
+        changeOrigin: true,
+        secure: false
+      }
+    }
   }
 })
